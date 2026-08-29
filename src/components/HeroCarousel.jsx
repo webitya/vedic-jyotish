@@ -4,31 +4,26 @@ import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function HeroCarousel() {
-  const slides = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=2400&q=85",
-      alt: "Vedic Astrology — Kundali and Dasha Chart",
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85",
-      alt: "Vastu Shastra — Residential Architecture",
-    },
-    {
-      id: 3,
-      image: "https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=2400&q=85",
-      alt: "Navratna Gemstones and Rudraksha",
-    },
-    {
-      id: 4,
-      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=2400&q=85",
-      alt: "Ach. Dr. Mohit Shah — Vedic Astrologer",
-    },
+  const DEFAULT_SLIDES = [
+    { id: "s1", image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=2400&q=85", alt: "Vedic Astrology — Kundali and Dasha Chart" },
+    { id: "s2", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85", alt: "Vastu Shastra — Residential Architecture" },
+    { id: "s3", image: "https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=2400&q=85", alt: "Navratna Gemstones and Rudraksha" },
+    { id: "s4", image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=2400&q=85", alt: "Ach. Dr. Mohit Shah — Vedic Astrologer" },
   ];
 
+  const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("admin_carousel");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) setSlides(parsed);
+      }
+    } catch {}
+  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));

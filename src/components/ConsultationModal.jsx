@@ -26,6 +26,14 @@ export default function ConsultationModal({ isOpen, onClose, initialService = "B
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Save lead to localStorage for admin panel
+    try {
+      const existing = JSON.parse(localStorage.getItem("admin_enquiries") || "[]");
+      existing.push({ ...formData, timestamp: Date.now() });
+      localStorage.setItem("admin_enquiries", JSON.stringify(existing));
+    } catch {}
+
     const text = `Namaste Ach. Dr. Mohit Shah ji,
 I would like to book a consultation at Vedic Jyotish Kendra.
 
