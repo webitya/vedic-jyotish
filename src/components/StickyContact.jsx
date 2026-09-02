@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Calendar, Phone } from "lucide-react";
 import { clinicInfo } from "@/data/siteContent";
@@ -21,15 +22,14 @@ export default function StickyContact() {
     <>
       <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2">
         {/* Calendar Consultation Booking Button */}
-        <button
-          type="button"
-          onClick={() => setBookingModalOpen(true)}
+        <Link
+          href="/book-consultation"
           aria-label="Book Consultation Appointment"
           title="Book Consultation"
-          className="group w-10 h-10 flex items-center justify-center bg-[#A86121] hover:bg-[#91521a] text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+          className="group w-10 h-10 flex items-center justify-center bg-[#6E3B1E] hover:bg-[#582f17] text-white rounded-md shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
         >
           <Calendar className="w-4.5 h-4.5 group-hover:scale-105 transition-transform" />
-        </button>
+        </Link>
 
         {/* WhatsApp Button */}
         <a

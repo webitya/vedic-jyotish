@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, Mail, MapPin, Navigation } from "lucide-react";
+import { Phone, Mail, MapPin, Navigation, ShieldCheck, Lock } from "lucide-react";
 import { clinicInfo, serviceCategories } from "@/data/siteContent";
 
 export default function Footer({ onOpenBooking }) {
@@ -11,11 +11,11 @@ export default function Footer({ onOpenBooking }) {
     <footer className="w-full bg-[#6E3B1E] text-white border-t border-[#854825] font-sans">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 pt-10 pb-8">
         
-        {/* Main 4-Column Footer Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 pb-10 border-b border-white/15 text-xs">
+        {/* Main 5-Column Responsive Footer Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-8 pb-10 border-b border-white/15 text-xs">
           
           {/* Column 1: Brand & Purview (Col 4) */}
-          <div className="lg:col-span-4 space-y-3">
+          <div className="lg:col-span-4 space-y-3.5">
             <Link href="/" className="flex items-center gap-3">
               <img
                 src="/logo.jpeg"
@@ -33,19 +33,23 @@ export default function Footer({ onOpenBooking }) {
             </Link>
 
             <p className="text-white/85 text-xs leading-relaxed max-w-sm font-normal">
-              A private astrological practice rooted in classical Parashari synthesis, Jaimini dasha timings, and authentic Sthapatya Veda architectural alignment in Ranchi.
+              A private astrological advisory practice rooted in classical Parashari synthesis, Jaimini dasha timings, and authentic Sthapatya Veda architectural alignment in Ranchi.
             </p>
 
             <div className="pt-1 text-[11px] text-white/70 space-y-0.5 font-normal">
               <div>• M.A. in Jyotish Acharya (Ranchi University)</div>
               <div>• AstroforU.com (Registered under GST Act)</div>
+              <div className="flex items-center gap-1.5 pt-1 text-white/90 font-medium">
+                <Lock className="w-3.5 h-3.5 text-amber-300" />
+                <span>256-Bit SSL Encrypted &amp; Razorpay Verified</span>
+              </div>
             </div>
           </div>
 
           {/* Column 2: Navigation Links (Col 2) */}
           <div className="lg:col-span-2 space-y-3">
-            <div className="text-xs font-semibold uppercase tracking-wider text-white">
-              Navigation
+            <div className="text-xs font-semibold uppercase tracking-wider text-white font-serif border-b border-white/10 pb-1">
+              Quick Links
             </div>
             <ul className="space-y-1.5 text-white/80 font-normal">
               <li>
@@ -80,45 +84,61 @@ export default function Footer({ onOpenBooking }) {
               </li>
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors cursor-pointer">
-                  Contact Us
+                  Contact &amp; Kendra Map
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Consultation Disciplines (Col 3) */}
+          {/* Column 3: Legal & Payment Compliance (Col 3) */}
           <div className="lg:col-span-3 space-y-3">
-            <div className="text-xs font-semibold uppercase tracking-wider text-white">
-              Primary Disciplines
+            <div className="text-xs font-semibold uppercase tracking-wider text-white font-serif border-b border-white/10 pb-1 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+              <span>Legal &amp; Compliance</span>
             </div>
             <ul className="space-y-1.5 text-white/80 font-normal">
-              {serviceCategories.map((cat) => (
-                <li key={cat.id}>
-                  <Link
-                    href="/services"
-                    className="hover:text-white transition-colors cursor-pointer"
-                  >
-                    {cat.title}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link href="/privacy-policy" className="hover:text-white transition-colors cursor-pointer font-medium">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions" className="hover:text-white transition-colors cursor-pointer font-medium">
+                  Terms &amp; Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/refund-policy" className="hover:text-white transition-colors cursor-pointer font-medium">
+                  Cancellation &amp; Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping-policy" className="hover:text-white transition-colors cursor-pointer font-medium">
+                  Shipping &amp; Delivery Policy
+                </Link>
+              </li>
               <li>
                 <Link href="/policy" className="hover:text-white transition-colors cursor-pointer">
-                  Consultation Ethics &amp; Policy
+                  Policy &amp; Compliance Portal
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors cursor-pointer">
+                  Grievance Redressal
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Location & Appointments (Col 3) */}
+          {/* Column 4: Direct Contact Coordinates (Col 3) */}
           <div className="lg:col-span-3 space-y-3">
-            <div className="text-xs font-semibold uppercase tracking-wider text-white">
-              Direct Contact
+            <div className="text-xs font-semibold uppercase tracking-wider text-white font-serif border-b border-white/10 pb-1">
+              Kendra Coordinates
             </div>
 
-            <div className="space-y-2 text-white/85 font-normal">
+            <div className="space-y-2.5 text-white/85 font-normal">
               <div className="flex items-start gap-2">
-                <MapPin className="w-3.5 h-3.5 text-white/80 shrink-0 mt-0.5" />
+                <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-white font-medium">{clinicInfo.address.line1}</span>
                   <div className="text-white/80 text-[11px]">{clinicInfo.address.landmark}</div>
@@ -126,8 +146,8 @@ export default function Footer({ onOpenBooking }) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
-                <Phone className="w-3.5 h-3.5 text-white/80 shrink-0" />
+              <div className="flex items-center gap-2 pt-1 border-t border-white/10">
+                <Phone className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                 <a
                   href={`tel:${clinicInfo.phone}`}
                   className="text-white hover:underline transition-colors font-medium cursor-pointer"
@@ -137,14 +157,14 @@ export default function Footer({ onOpenBooking }) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Navigation className="w-3.5 h-3.5 text-white/80 shrink-0" />
+                <Navigation className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                 <span className="text-[11px] text-white/80">
                   Coordinator: {clinicInfo.coordinator.name} ({clinicInfo.coordinator.formattedPhone})
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-white/80 shrink-0" />
+                <Mail className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                 <a
                   href={`mailto:${clinicInfo.email}`}
                   className="hover:text-white transition-colors cursor-pointer break-all"
@@ -157,24 +177,36 @@ export default function Footer({ onOpenBooking }) {
 
         </div>
 
-        {/* Bottom Attribution Bar with Webitya Link */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/75 font-normal">
-          <div className="text-center sm:text-left text-white/80">
-            © {currentYear} Vedic Jyotish Kendra. All rights reserved under academic copyright.
+        {/* Bottom Attribution Bar with Policy Links */}
+        <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-white/75 font-normal">
+          <div className="text-center md:text-left text-white/80">
+            © {currentYear} Vedic Jyotish Kendra (AstroforU.com). All rights reserved.
           </div>
 
-          <div className="flex items-center gap-4 text-white/80">
-            <Link href="/policy" className="hover:text-white transition-colors cursor-pointer">
-              Privacy &amp; Disclaimer
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-white/85">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors cursor-pointer">
+              Privacy
+            </Link>
+            <span>·</span>
+            <Link href="/terms-and-conditions" className="hover:text-white transition-colors cursor-pointer">
+              Terms
+            </Link>
+            <span>·</span>
+            <Link href="/refund-policy" className="hover:text-white transition-colors cursor-pointer">
+              Refunds
+            </Link>
+            <span>·</span>
+            <Link href="/shipping-policy" className="hover:text-white transition-colors cursor-pointer">
+              Shipping
             </Link>
             <span>·</span>
             <Link href="/contact" className="hover:text-white transition-colors cursor-pointer">
-              Ranchi Center
+              Ranchi Chamber
             </Link>
           </div>
         </div>
 
-        {/* Webitya Attribution — centered below HR */}
+        {/* Webitya Attribution */}
         <hr className="border-white/15 mt-4" />
         <div className="pt-3 pb-1 text-center text-[11px] text-white/75 font-normal">
           Crafted &amp; Maintained with precision by{" "}
@@ -192,4 +224,3 @@ export default function Footer({ onOpenBooking }) {
     </footer>
   );
 }
-

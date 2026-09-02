@@ -58,14 +58,13 @@ export default function AboutPage() {
                 </div>
 
                 <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setBookingOpen(true)}
+                  <Link
+                    href="/book-consultation"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs font-semibold uppercase tracking-wider rounded-md shadow-xs transition-colors cursor-pointer"
                   >
                     <Calendar className="w-3.5 h-3.5" />
                     <span>BOOK A CONSULTATION</span>
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -337,14 +336,13 @@ export default function AboutPage() {
               </div>
 
               <div className="shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setBookingOpen(true)}
+                <Link
+                  href="/book-consultation"
                   className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs font-semibold uppercase tracking-wider rounded-md shadow-xs transition-colors cursor-pointer"
                 >
                   <span>BOOK YOUR CONSULTATION</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </Link>
               </div>
 
             </div>
@@ -353,8 +351,7 @@ export default function AboutPage() {
 
       </main>
 
-      <Footer onOpenBooking={() => setBookingOpen(true)} />
-      <ConsultationModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <Footer />
     </div>
   );
 }

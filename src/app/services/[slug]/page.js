@@ -189,13 +189,13 @@ export default function ServiceDetailPage({ params }) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <button
-                    onClick={() => setBookingOpen(true)}
-                    className="px-5 py-2.5 bg-[#A86121] hover:bg-[#91521a] text-white text-xs uppercase tracking-wider font-medium rounded-md shadow-xs hover:shadow-sm cursor-pointer transition-all flex items-center gap-2"
+                  <Link
+                    href={`/book-consultation?service=${encodeURIComponent(service.name)}`}
+                    className="px-5 py-2.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs uppercase tracking-wider font-semibold rounded-md shadow-xs hover:shadow-sm cursor-pointer transition-all flex items-center gap-2"
                   >
                     <Calendar className="w-3.5 h-3.5" />
                     <span>Book Session Now</span>
-                  </button>
+                  </Link>
 
                   <a
                     href={`tel:${clinicInfo.phone}`}
@@ -439,12 +439,6 @@ export default function ServiceDetailPage({ params }) {
       </main>
 
       <Footer />
-
-      <ConsultationModal
-        isOpen={bookingOpen}
-        onClose={() => setBookingOpen(false)}
-        initialService={service.name}
-      />
     </div>
   );
 }

@@ -30,7 +30,10 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased text-neutral-900 bg-white selection:bg-neutral-900 selection:text-white overflow-x-clip max-w-full min-h-screen">
+      <body
+        className="font-sans antialiased text-neutral-900 bg-white selection:bg-neutral-900 selection:text-white overflow-x-clip max-w-full min-h-screen"
+        suppressHydrationWarning
+      >
         <SmoothScroll>
           {children}
           <StickyContact />
@@ -40,5 +43,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
-

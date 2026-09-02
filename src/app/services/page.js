@@ -256,16 +256,13 @@ export default function ServicesDirectoryPage() {
                           >
                             Details
                           </Link>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookService(srv.name);
-                            }}
-                            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-[#A86121] hover:bg-[#91521a] text-white text-[11px] uppercase tracking-wider font-medium transition-all rounded-md shadow-2xs hover:shadow-xs cursor-pointer"
+                          <Link
+                            href={`/book-consultation?service=${encodeURIComponent(srv.name)}`}
+                            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-[11px] uppercase tracking-wider font-semibold transition-all rounded-md shadow-2xs hover:shadow-xs cursor-pointer"
                           >
                             <Calendar className="w-3 h-3" />
                             <span>Book Session</span>
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -279,12 +276,6 @@ export default function ServicesDirectoryPage() {
       </main>
 
       <Footer />
-
-      <ConsultationModal
-        isOpen={bookingOpen}
-        onClose={() => setBookingOpen(false)}
-        initialService={selectedService}
-      />
     </div>
   );
 }

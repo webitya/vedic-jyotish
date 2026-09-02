@@ -83,19 +83,19 @@ export default function Navbar({ onOpenBooking }) {
 
           {/* Action Button */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <button
-              onClick={() => onOpenBooking ? onOpenBooking() : window.location.href = "/contact#book"}
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 bg-[#A86121] hover:bg-[#91521a] text-white text-xs font-medium uppercase tracking-wider transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
+            <Link
+              href="/book-consultation"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs font-semibold uppercase tracking-wider transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
             >
               <span>Book Consultation</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
 
             {/* Mobile Menu Button - Borderless & larger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open navigation menu"
-              className="lg:hidden p-1 text-black hover:text-[#A86121] transition-colors cursor-pointer"
+              className="lg:hidden p-1 text-black hover:text-[#6E3B1E] transition-colors cursor-pointer"
             >
               <Menu className="w-6 h-6 sm:w-7 sm:h-7 stroke-[1.8]" />
             </button>
@@ -153,12 +153,12 @@ export default function Navbar({ onOpenBooking }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center gap-2 text-xs py-2.5 px-2 rounded-md transition-colors cursor-pointer ${
                       active
-                        ? "bg-[#A86121]/10 text-[#A86121] font-semibold"
+                        ? "bg-[#6E3B1E]/10 text-[#6E3B1E] font-semibold"
                         : "text-neutral-700 hover:bg-neutral-100 hover:text-black font-medium"
                     }`}
                   >
                     {link.hasBasket && (
-                      <ShoppingBag className="w-3.5 h-3.5 text-[#A86121] shrink-0" />
+                      <ShoppingBag className="w-3.5 h-3.5 text-black" />
                     )}
                     <span>{link.name}</span>
                   </Link>
@@ -174,18 +174,14 @@ export default function Navbar({ onOpenBooking }) {
             </nav>
           </div>
 
-          <div className="pt-4 border-t border-neutral-200 flex flex-col gap-2.5">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (onOpenBooking) onOpenBooking();
-                else window.location.href = "/contact#book";
-              }}
-              className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-[#A86121] hover:bg-[#91521a] text-white text-xs uppercase tracking-wider font-medium rounded-md shadow-xs cursor-pointer transition-all"
+          <div className="pt-6 border-t border-neutral-200 space-y-3">
+            <Link
+              href="/book-consultation"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-2.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs uppercase tracking-wider font-semibold rounded-md shadow-xs transition-colors text-center block cursor-pointer"
             >
-              <span>Book Consultation</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+              Book Consultation
+            </Link>
             <a
               href={`tel:${clinicInfo.phone}`}
               className="w-full flex items-center justify-center gap-1.5 py-2 border border-neutral-300 text-black text-xs uppercase tracking-wider font-normal hover:bg-neutral-50 rounded-md cursor-pointer transition-colors"

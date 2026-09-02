@@ -72,14 +72,13 @@ export default function AboutUsSection({ onOpenBooking }) {
 
             {/* Compact Action Buttons */}
             <div className="flex flex-wrap items-center gap-2.5 pt-1.5">
-              <button
-                type="button"
-                onClick={() => onOpenBooking ? onOpenBooking() : window.location.href = "/contact#book"}
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#A86121] hover:bg-[#91521a] text-white text-xs uppercase tracking-wider font-medium transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
+              <Link
+                href="/book-consultation"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs uppercase tracking-wider font-semibold transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
               >
                 <span>Book Consultation</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
+              </Link>
 
               <Link
                 href="/about"
@@ -92,25 +91,24 @@ export default function AboutUsSection({ onOpenBooking }) {
 
           </div>
 
-          {/* Right Column: Circular Clockwise Rotating Vedic Mandala */}
-          <div className="lg:col-span-5 flex items-center justify-center py-2 lg:py-0">
-            <div className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 flex items-center justify-center">
-              
-              {/* Outer Decorative Ring */}
-              <div className="absolute inset-0 rounded-full border border-dashed border-[#A86121]/30 animate-pulse pointer-events-none" />
-              <div className="absolute -inset-1.5 rounded-full border border-[#E2D8C7] opacity-60 pointer-events-none" />
-              
-              {/* Rotating Vedic Rounded Graphic (Clockwise Animation) */}
-              <div className="w-full h-full p-2 flex items-center justify-center">
-                <img
-                  src="/vedicrounded.webp"
-                  alt="Vedic Astrology Mandala"
-                  className="w-full h-full object-contain animate-spin-slow drop-shadow-[0_6px_20px_rgba(168,97,33,0.12)] select-none pointer-events-none"
-                  loading="eager"
-                />
-              </div>
-
+          {/* Right Column: Acharya Ji Portrait with Rotating Vedic Mandala Backdrop */}
+          <div className="lg:col-span-5 flex items-center justify-center relative py-4 lg:py-0">
+            {/* Rotating Circular Vedic Mandala Backdrop */}
+            <div className="absolute w-[320px] h-[320px] sm:w-[380px] sm:h-[380px] lg:w-[440px] lg:h-[440px] rounded-full overflow-hidden flex items-center justify-center opacity-85 pointer-events-none -z-0">
+              <img
+                src="/vedicrounded.webp"
+                alt="Vedic Astrology Mandala"
+                className="w-full h-full object-contain rounded-full animate-[spin_90s_linear_infinite] drop-shadow-[0_6px_20px_rgba(168,97,33,0.12)] select-none pointer-events-none"
+                loading="eager"
+              />
             </div>
+
+            {/* Acharya Ji Portrait Foreground */}
+            <img
+              src="/aacharyajii.png"
+              alt="Acharya Dr. Mohit Shah - Vedic Jyotish Kendra"
+              className="relative z-10 w-auto max-h-[340px] sm:max-h-[380px] object-contain object-top drop-shadow-lg select-none"
+            />
           </div>
 
         </div>

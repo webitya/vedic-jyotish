@@ -138,18 +138,14 @@ export default function HomeServicesSection({ onOpenBooking }) {
                           </span>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onOpenBooking) onOpenBooking(srv.name);
-                            else window.location.href = "/contact#book";
-                          }}
-                          className="px-3 py-1 bg-[#A86121] hover:bg-[#91521a] text-white text-[10px] sm:text-[11px] uppercase tracking-wider font-medium rounded-md shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center gap-1"
+                        <Link
+                          href={`/book-consultation?service=${encodeURIComponent(srv.name)}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-3 py-1 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold rounded-md shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center gap-1"
                         >
                           <Calendar className="w-3 h-3" />
                           <span>Book</span>
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ConsultationModal from "@/components/ConsultationModal";
 import {
-  Sparkles,
   Calendar,
   Clock,
   MapPin,
@@ -14,23 +13,30 @@ import {
   Phone,
   User,
   ChevronDown,
-  ArrowRight,
   CheckCircle,
   ShieldCheck,
-  Award,
-  Scroll,
-  BookOpen
+  Lock,
+  Bell,
+  Headphones,
+  Sun,
+  Flower2,
+  Star,
+  Info,
+  ArrowLeft,
 } from "lucide-react";
 import { allServices, clinicInfo } from "@/data/siteContent";
 
-export default function BookConsultationPage() {
-  const [modalOpen, setModalOpen] = useState(false);
+function BookingForm() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialServiceParam = searchParams.get("service") || "Birth Chart Analysis";
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
     gender: "Male",
-    service: "Birth Chart Analysis",
+    service: initialServiceParam,
     mode: "In-Person (Ranchi Kendra)",
     dob: "",
     tobHours: "10",
@@ -42,6 +48,12 @@ export default function BookConsultationPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (initialServiceParam) {
+      setFormData((prev) => ({ ...prev, service: initialServiceParam }));
+    }
+  }, [initialServiceParam]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -73,10 +85,10 @@ export default function BookConsultationPage() {
       pob: formData.pob,
       notes: formData.notes,
       sourcePage: "/book-consultation",
-      sourceCard: "Dedicated Booking Page Form",
+      sourceCard: "Online Consultation Booking Page",
     };
 
-    // Save lead to MongoDB Atlas
+    // Save lead to MongoDB Atlas CRM
     try {
       await fetch("/api/enquiries", {
         method: "POST",
@@ -100,7 +112,7 @@ ${formData.email ? `- Email: ${formData.email}\n` : ""}- Gender: ${formData.gend
 - Preferred Mode: ${formData.mode}
 ${formData.dob ? `- Date of Birth: ${formData.dob}\n` : ""}- Time of Birth: ${formattedTob}
 ${formData.pob ? `- Place of Birth: ${formData.pob}\n` : ""}${formData.notes ? `- Queries / Notes: ${formData.notes}\n` : ""}
-Please confirm the appointment schedule.`;
+Kindly confirm the consultation slot availability.`;
 
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/917004433677?text=${encodedText}`;
@@ -109,390 +121,558 @@ Please confirm the appointment schedule.`;
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-neutral-900 flex flex-col font-sans">
-      <Navbar onOpenBooking={() => setModalOpen(true)} />
+    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-neutral-800 w-full overflow-x-clip font-sans">
+      <Navbar />
 
-      <main className="flex-1 py-10 sm:py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="flex-1 w-full py-6 sm:py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
-          {/* Top Breadcrumb & Page Header */}
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2.5">
-            <span className="text-xs font-semibold tracking-[0.2em] text-[#6E3B1E] uppercase inline-block">
-              Authentic Vedic Consultation
-            </span>
-            <h1 className="text-3xl sm:text-4xl font-semibold text-neutral-900 tracking-tight font-serif">
-              Book Your Astrological Consultation
-            </h1>
-            <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
-              Direct astrological counsel with <strong>Ach. Dr. Mohit Shah</strong> (Ph.D. Vedic Astrology, M.A. Jyotirvigyan). Accurate natal chart calculations, Parashari dasha evaluation &amp; customized remedial gemstones.
-            </p>
+          {/* ── TOP HERO HEADER SECTION ────────────────────────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center pt-2">
+            
+            {/* Left Title & Tagline */}
+            <div className="lg:col-span-7 space-y-3">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/logo.jpeg"
+                  alt="Vedic Jyotish Kendra Logo"
+                  className="w-8 h-8 rounded-full object-cover border border-[#D9CDBF]"
+                />
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-neutral-900 block font-serif">
+                    {clinicInfo.name}
+                  </span>
+                  <span className="text-[10px] text-[#8C4A20] font-medium block">
+                    Ancient Wisdom. Modern Guidance.
+                  </span>
+                </div>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-neutral-900 font-serif leading-[1.15] tracking-tight">
+                Book Your{" "}
+                <span className="text-[#6E3B1E] font-medium">Vedic Consultation</span>
+                <br className="hidden sm:inline" /> with Confidence
+              </h1>
+
+              {/* Decorative Diamond & Subtitle */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center gap-2 text-[#8C4A20]">
+                  <div className="w-8 h-px bg-[#D9CDBF]"></div>
+                  <div className="w-1.5 h-1.5 rotate-45 bg-[#6E3B1E]"></div>
+                  <div className="w-8 h-px bg-[#D9CDBF]"></div>
+                </div>
+                <p className="text-xs sm:text-sm text-neutral-600 font-normal max-w-lg">
+                  Take the first step towards clarity, guidance and a better tomorrow.
+                </p>
+              </div>
+            </div>
+
+            {/* Right Acharya Ji Chamber Portrait */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-sm sm:max-w-md aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-tr from-[#EEDDC8] to-[#FAF7F2] p-2 border border-[#E6DDCE] shadow-sm flex items-center justify-center">
+                {/* Background Rotating Vedic Ring */}
+                <div className="absolute w-[280px] h-[280px] rounded-full overflow-hidden opacity-40 pointer-events-none -z-0">
+                  <img
+                    src="/vedicrounded.webp"
+                    alt="Vedic Astrology Chakra"
+                    className="w-full h-full object-contain animate-[spin_90s_linear_infinite]"
+                  />
+                </div>
+                <img
+                  src="/aacharyajii.png"
+                  alt="Acharya Dr. Mohit Shah - Vedic Astrological Advisor"
+                  className="relative z-10 w-auto max-h-[260px] sm:max-h-[300px] object-contain object-top drop-shadow-md select-none"
+                />
+              </div>
+            </div>
+
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* ── 2-COLUMN MAIN INTERACTION GRID ─────────────────────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Left Column: Form (7 cols) */}
-            <div className="lg:col-span-7 bg-white border border-[#E6DDCE] p-5 sm:p-7 shadow-xs rounded-lg">
-              {submitted ? (
-                <div className="py-12 text-center space-y-4">
-                  <div className="w-14 h-14 bg-green-50 text-green-700 rounded-full flex items-center justify-center mx-auto border border-green-200 shadow-xs">
-                    <CheckCircle className="w-7 h-7" />
+            {/* Left Column: Why Consult + Need Help (Col 4) */}
+            <div className="lg:col-span-4 space-y-6">
+              
+              {/* Card 1: Why Consult Benefits */}
+              <div className="bg-white border border-[#E6DDCE] p-6 rounded-2xl shadow-2xs space-y-5">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-[#6E3B1E] font-serif border-b border-[#E6DDCE] pb-2.5">
+                  WHY CONSULT?
+                </h2>
+
+                <div className="space-y-4">
+                  {/* Benefit 1 */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center shrink-0 text-[#6E3B1E]">
+                      <Sun className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h3 className="text-xs font-semibold text-neutral-900 font-serif">
+                        Accurate Guidance
+                      </h3>
+                      <p className="text-[11px] text-neutral-600 leading-relaxed font-normal">
+                        Solutions rooted in authentic Vedic knowledge and mathematical calculations.
+                      </p>
+                    </div>
                   </div>
-                  <h2 className="text-xl font-semibold text-neutral-900 font-serif">
-                    Appointment Request Dispatched!
-                  </h2>
-                  <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto leading-relaxed font-normal">
-                    Your details have been recorded in our Kendra database and forwarded to our official WhatsApp booking line. Our team will verify planetary ephemeris data and confirm your consultation slot shortly.
-                  </p>
-                  <div className="pt-3 flex flex-wrap justify-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setSubmitted(false)}
-                      className="px-6 py-2.5 bg-[#6E3B1E] text-white text-xs uppercase tracking-wider font-semibold rounded-md hover:bg-[#582f17] cursor-pointer shadow-xs transition-colors"
-                    >
-                      Book Another Consultation
-                    </button>
-                    <Link
-                      href="/"
-                      className="px-6 py-2.5 border border-neutral-300 hover:bg-neutral-100 text-neutral-800 text-xs uppercase tracking-wider font-semibold rounded-md cursor-pointer transition-colors"
-                    >
-                      Return to Homepage
-                    </Link>
+
+                  {/* Benefit 2 */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center shrink-0 text-[#6E3B1E]">
+                      <Flower2 className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h3 className="text-xs font-semibold text-neutral-900 font-serif">
+                        Personalized Approach
+                      </h3>
+                      <p className="text-[11px] text-neutral-600 leading-relaxed font-normal">
+                        Every chart is unique, every solution is personalized to your planetary dasha.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Benefit 3 */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center shrink-0 text-[#6E3B1E]">
+                      <Star className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h3 className="text-xs font-semibold text-neutral-900 font-serif">
+                        Trusted Expertise
+                      </h3>
+                      <p className="text-[11px] text-neutral-600 leading-relaxed font-normal">
+                        Learn from 15+ years of study, doctoral research, practice &amp; experience.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Benefit 4 */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center shrink-0 text-[#6E3B1E]">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h3 className="text-xs font-semibold text-neutral-900 font-serif">
+                        Confidential &amp; Secure
+                      </h3>
+                      <p className="text-[11px] text-neutral-600 leading-relaxed font-normal">
+                        Your privacy, birth coordinates and personal trust are our priority.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
-                  <div className="border-b border-neutral-200 pb-2.5">
-                    <h2 className="text-sm font-semibold uppercase tracking-wider text-neutral-900 font-serif">
-                      Client &amp; Astrological Details
+              </div>
+
+              {/* Card 2: Need Help */}
+              <div className="bg-white border border-[#E6DDCE] p-6 rounded-2xl shadow-2xs space-y-3.5">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-[#6E3B1E] font-serif border-b border-[#E6DDCE] pb-2.5">
+                  NEED HELP?
+                </h2>
+                <p className="text-xs text-neutral-600 font-normal leading-relaxed">
+                  Our coordinator team is here to assist you with your booking.
+                </p>
+
+                <div className="space-y-2 pt-1 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <Phone className="w-3.5 h-3.5 text-[#6E3B1E] shrink-0" />
+                    <a
+                      href={`tel:${clinicInfo.phone}`}
+                      className="font-semibold text-neutral-900 hover:text-[#6E3B1E] transition-colors"
+                    >
+                      +91 70044 33677
+                    </a>
+                  </div>
+
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-3.5 h-3.5 text-[#6E3B1E] shrink-0" />
+                    <a
+                      href={`mailto:${clinicInfo.email}`}
+                      className="text-neutral-700 hover:text-[#6E3B1E] transition-colors break-all"
+                    >
+                      {clinicInfo.email}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Security Encrypted Tag */}
+                <div className="mt-4 bg-[#FAF7F2] border border-[#E6DDCE] p-3 rounded-xl flex items-center gap-2.5">
+                  <div className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-green-700 border border-[#E6DDCE] shrink-0">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <span className="text-[11px] font-medium text-neutral-700">
+                    Your information is safe and encrypted
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Column: Main Booking Form Container (Col 8) */}
+            <div className="lg:col-span-8">
+              <div className="bg-white border border-[#E6DDCE] p-6 sm:p-8 lg:p-10 rounded-2xl shadow-sm">
+                
+                {/* Form Header */}
+                <div className="flex items-start gap-3.5 pb-6 mb-6 border-b border-[#E6DDCE]">
+                  <div className="w-11 h-11 rounded-xl bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center text-[#6E3B1E] shrink-0 shadow-2xs">
+                    <Calendar className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <h2 className="text-lg sm:text-xl font-bold uppercase tracking-wider text-neutral-900 font-serif">
+                      BOOK VEDIC CONSULTATION
                     </h2>
-                    <p className="text-[11px] text-neutral-500 font-normal">
-                      Provide accurate birth information for precision horary and Kundali calculations.
+                    <p className="text-xs text-neutral-500 font-normal">
+                      Ach. Dr. Mohit Shah · Ph.D. Vedic Astrology (MCVA)
                     </p>
                   </div>
+                </div>
 
-                  {/* Row 1: Name & Phone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <div className="relative">
-                        <User className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="text"
-                          name="name"
-                          required
-                          value={formData.name}
-                          onChange={handleChange}
-                          placeholder="Full Name"
-                          className="w-full pl-9 pr-3 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium"
-                        />
-                      </div>
+                {submitted ? (
+                  <div className="py-12 text-center space-y-4">
+                    <div className="w-16 h-16 bg-green-50 text-green-700 rounded-full flex items-center justify-center mx-auto border border-green-200 shadow-xs">
+                      <CheckCircle className="w-8 h-8" />
                     </div>
-
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                        Phone Number <span className="text-red-500">*</span>
-                      </label>
-                      <div className="relative">
-                        <Phone className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="tel"
-                          name="phone"
-                          required
-                          value={formData.phone}
-                          onChange={handleChange}
-                          placeholder="10-digit mobile number"
-                          className="w-full pl-9 pr-3 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium"
-                        />
-                      </div>
+                    <div className="space-y-1">
+                      <h3 className="text-xl font-semibold text-neutral-900 font-serif">
+                        Consultation Request Submitted!
+                      </h3>
+                      <p className="text-xs text-neutral-600 max-w-md mx-auto leading-relaxed">
+                        Your consultation details have been recorded and transferred to our official WhatsApp booking desk (<strong>+91 70044 33677</strong>). Our team will connect with you shortly to confirm your appointment slot.
+                      </p>
+                    </div>
+                    <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                      <button
+                        onClick={() => setSubmitted(false)}
+                        className="px-5 py-2.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs font-semibold uppercase tracking-wider rounded-md transition-colors cursor-pointer shadow-xs"
+                      >
+                        Submit Another Booking
+                      </button>
+                      <Link
+                        href="/"
+                        className="px-5 py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-semibold uppercase tracking-wider rounded-md transition-colors cursor-pointer border border-neutral-300"
+                      >
+                        Back to Home
+                      </Link>
                     </div>
                   </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+                    
+                    {/* Row 1: Full Name & Phone Number */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                          FULL NAME <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <User className="w-3.5 h-3.5 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            name="name"
+                            required
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Enter your full name"
+                            className="w-full pl-9 pr-3 py-2.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium placeholder:text-neutral-400"
+                          />
+                        </div>
+                      </div>
 
-                  {/* Row 2: Email & Gender Pill Select */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                        Email Address (Optional)
-                      </label>
-                      <div className="relative">
-                        <Mail className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="Email Address"
-                          className="w-full pl-9 pr-3 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-normal"
-                        />
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                          PHONE NUMBER <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Phone className="w-3.5 h-3.5 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="tel"
+                            name="phone"
+                            required
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="10-digit mobile number"
+                            className="w-full pl-9 pr-3 py-2.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium placeholder:text-neutral-400"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                        Gender
-                      </label>
-                      <div className="grid grid-cols-3 gap-1 bg-neutral-100 p-0.5 border border-neutral-300 rounded-md">
-                        {["Male", "Female", "Other"].map((g) => (
-                          <button
-                            key={g}
-                            type="button"
-                            onClick={() => handleGenderSelect(g)}
-                            className={`py-1.5 text-[11px] font-semibold transition-colors cursor-pointer text-center rounded-sm ${
-                              formData.gender === g
-                                ? "bg-[#6E3B1E] text-white shadow-xs"
-                                : "text-neutral-700 hover:text-neutral-900 hover:bg-neutral-200/70"
-                            }`}
-                          >
-                            {g}
-                          </button>
-                        ))}
+                    {/* Row 2: Email & Gender */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                          EMAIL ADDRESS (OPTIONAL)
+                        </label>
+                        <div className="relative">
+                          <Mail className="w-3.5 h-3.5 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="Enter your email address"
+                            className="w-full pl-9 pr-3 py-2.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-normal placeholder:text-neutral-400"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Row 3: Discipline & Mode */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                        Consultation Discipline
-                      </label>
-                      <div className="relative">
-                        <select
-                          name="service"
-                          value={formData.service}
-                          onChange={handleChange}
-                          className="w-full appearance-none px-3 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md pr-8 cursor-pointer font-medium"
-                        >
-                          {allServices.map((s) => (
-                            <option key={s.id} value={s.name}>
-                              {s.name}
-                            </option>
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                          GENDER
+                        </label>
+                        <div className="grid grid-cols-3 gap-1 bg-neutral-100 p-0.5 border border-neutral-300 rounded-md">
+                          {["Male", "Female", "Other"].map((g) => (
+                            <button
+                              key={g}
+                              type="button"
+                              onClick={() => handleGenderSelect(g)}
+                              className={`py-2 text-[11px] font-semibold transition-all cursor-pointer text-center rounded-sm ${
+                                formData.gender === g
+                                  ? "bg-[#6E3B1E] text-white shadow-xs"
+                                  : "text-neutral-700 hover:text-neutral-900 hover:bg-neutral-200/60"
+                              }`}
+                            >
+                              {g}
+                            </button>
                           ))}
-                          <option value="General Vedic Guidance">General Vedic Guidance</option>
-                          <option value="Gemstone Recommendation">Gemstone Recommendation</option>
-                        </select>
-                        <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                        Consultation Mode
-                      </label>
-                      <div className="relative">
-                        <select
-                          name="mode"
-                          value={formData.mode}
-                          onChange={handleChange}
-                          className="w-full appearance-none px-3 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md pr-8 cursor-pointer font-medium"
-                        >
-                          <option value="In-Person (Ranchi Kendra)">
-                            In-Person (Ranchi Kendra)
-                          </option>
-                          <option value="Online Video Consultation">
-                            Online Video (Meet / WhatsApp)
-                          </option>
-                          <option value="Telephonic Consultation">
-                            Telephonic Consultation
-                          </option>
-                        </select>
-                        <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Birth Details Box */}
-                  <div className="bg-[#FAF7F2] p-3.5 border border-[#E6DDCE] rounded-md space-y-2.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#6E3B1E]">
-                        Birth Chart Particulars (Kundali &amp; Prashna)
-                      </span>
-                      <span className="text-[10px] text-neutral-500">Optional if unknown</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {/* Row 3: Discipline & Mode */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                          Date of Birth
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                          CONSULTATION DISCIPLINE <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="date"
-                          name="dob"
-                          value={formData.dob}
-                          onChange={handleChange}
-                          className="w-full px-2.5 py-1.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md cursor-pointer"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                          Time of Birth
-                        </label>
-                        <div className="flex gap-1">
-                          <input
-                            type="text"
-                            name="tobHours"
-                            placeholder="HH"
-                            maxLength={2}
-                            value={formData.tobHours}
+                        <div className="relative">
+                          <select
+                            name="service"
+                            value={formData.service}
                             onChange={handleChange}
-                            className="w-11 px-1 py-1.5 text-center bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium"
-                          />
-                          <span className="self-center font-bold text-neutral-400">:</span>
-                          <input
-                            type="text"
-                            name="tobMinutes"
-                            placeholder="MM"
-                            maxLength={2}
-                            value={formData.tobMinutes}
-                            onChange={handleChange}
-                            className="w-11 px-1 py-1.5 text-center bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium"
-                          />
-                          <div className="flex bg-neutral-200/90 p-0.5 border border-neutral-300 rounded-md shrink-0">
-                            {["AM", "PM"].map((period) => (
-                              <button
-                                key={period}
-                                type="button"
-                                onClick={() => handleAmPmSelect(period)}
-                                className={`px-2 py-1 text-[10px] font-bold transition-colors cursor-pointer rounded-xs ${
-                                  formData.tobAmPm === period
-                                    ? "bg-[#6E3B1E] text-white"
-                                    : "text-neutral-700 hover:text-black"
-                                }`}
-                              >
-                                {period}
-                              </button>
+                            className="w-full appearance-none px-3.5 py-2.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md pr-8 cursor-pointer font-medium"
+                          >
+                            {allServices.map((s) => (
+                              <option key={s.id} value={s.name}>
+                                {s.name} ({s.categoryTitle})
+                              </option>
                             ))}
+                            <option value="General Vedic Life Guidance">
+                              General Vedic Life Guidance
+                            </option>
+                            <option value="Gemstone Recommendation">
+                              Gemstone Recommendation
+                            </option>
+                          </select>
+                          <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                          CONSULTATION MODE <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <select
+                            name="mode"
+                            value={formData.mode}
+                            onChange={handleChange}
+                            className="w-full appearance-none px-3.5 py-2.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md pr-8 cursor-pointer font-medium"
+                          >
+                            <option value="In-Person (Ranchi Kendra)">
+                              In-Person (Ranchi Kendra)
+                            </option>
+                            <option value="Online Video Consultation">
+                              Online Video (Google Meet / WhatsApp)
+                            </option>
+                            <option value="Telephonic Consultation">
+                              Telephonic Consultation
+                            </option>
+                          </select>
+                          <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Birth Details Box */}
+                    <div className="bg-[#FAF7F2] p-4 border border-[#E6DDCE] rounded-xl space-y-3">
+                      <div className="flex items-center justify-between border-b border-[#E6DDCE] pb-2">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E3B1E] font-serif">
+                          BIRTH DETAILS (FOR KUNDALI &amp; HORARY)
+                        </span>
+                        <span className="text-[10px] text-neutral-500 font-normal">Optional if unknown</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-700 mb-1">
+                            DATE OF BIRTH
+                          </label>
+                          <input
+                            type="date"
+                            name="dob"
+                            value={formData.dob}
+                            onChange={handleChange}
+                            className="w-full px-2.5 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md cursor-pointer font-medium"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-700 mb-1">
+                            TIME OF BIRTH &amp; PERIOD
+                          </label>
+                          <div className="flex gap-1 items-center">
+                            <input
+                              type="text"
+                              name="tobHours"
+                              placeholder="10"
+                              maxLength={2}
+                              value={formData.tobHours}
+                              onChange={handleChange}
+                              className="w-12 px-1 py-2 text-center bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium"
+                            />
+                            <span className="self-center font-bold text-neutral-400">:</span>
+                            <input
+                              type="text"
+                              name="tobMinutes"
+                              placeholder="30"
+                              maxLength={2}
+                              value={formData.tobMinutes}
+                              onChange={handleChange}
+                              className="w-12 px-1 py-2 text-center bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md font-medium"
+                            />
+                            <div className="flex bg-neutral-200/90 p-0.5 border border-neutral-300 rounded-md shrink-0">
+                              {["AM", "PM"].map((period) => (
+                                <button
+                                  key={period}
+                                  type="button"
+                                  onClick={() => handleAmPmSelect(period)}
+                                  className={`px-2 py-1.5 text-[10px] font-bold transition-colors cursor-pointer rounded-xs ${
+                                    formData.tobAmPm === period
+                                      ? "bg-[#6E3B1E] text-white"
+                                      : "text-neutral-700 hover:text-black"
+                                  }`}
+                                >
+                                  {period}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-700 mb-1">
+                            PLACE OF BIRTH
+                          </label>
+                          <div className="relative">
+                            <MapPin className="w-3.5 h-3.5 text-neutral-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                            <input
+                              type="text"
+                              name="pob"
+                              value={formData.pob}
+                              onChange={handleChange}
+                              placeholder="City, State"
+                              className="w-full pl-8 pr-2.5 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md placeholder:text-neutral-400"
+                            />
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      <div>
-                        <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                          Place of Birth
-                        </label>
-                        <div className="relative">
-                          <MapPin className="w-3 h-3 text-neutral-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-                          <input
-                            type="text"
-                            name="pob"
-                            value={formData.pob}
-                            onChange={handleChange}
-                            placeholder="City, State"
-                            className="w-full pl-7 pr-2.5 py-1.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md"
-                          />
-                        </div>
+                    {/* Specific Questions / Notes */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-700 mb-1.5">
+                        SPECIFIC QUERY / CONCERN (OPTIONAL)
+                      </label>
+                      <textarea
+                        name="notes"
+                        rows={3}
+                        value={formData.notes}
+                        onChange={handleChange}
+                        placeholder="Consultation topic, specific questions or life areas to focus on..."
+                        className="w-full px-3.5 py-2.5 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md resize-none placeholder:text-neutral-400"
+                      />
+                    </div>
+
+                    {/* Form Bottom Action Row */}
+                    <div className="pt-3 border-t border-[#E6DDCE] flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="flex items-start gap-2 text-[11px] text-neutral-600 max-w-xs sm:max-w-sm">
+                        <Info className="w-4 h-4 text-[#6E3B1E] shrink-0 mt-0.5" />
+                        <span>After booking, our team will connect with you to confirm your appointment details.</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <button
+                          type="submit"
+                          disabled={submitting}
+                          className="flex-1 sm:flex-initial px-6 py-3 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs uppercase tracking-wider font-semibold transition-all rounded-md shadow-xs hover:shadow-md cursor-pointer disabled:opacity-50 text-center flex items-center justify-center gap-2"
+                        >
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>Book Now</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => router.push("/")}
+                          className="px-4 py-3 bg-white border border-neutral-300 hover:border-black text-neutral-700 hover:text-black text-xs uppercase tracking-wider font-semibold rounded-md transition-colors cursor-pointer"
+                        >
+                          Close
+                        </button>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Notes */}
-                  <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-700 mb-1">
-                      Specific Areas of Focus / Query (Optional)
-                    </label>
-                    <textarea
-                      name="notes"
-                      rows={3}
-                      value={formData.notes}
-                      onChange={handleChange}
-                      placeholder="Consultation topic, specific questions or life areas to focus on..."
-                      className="w-full px-3 py-2 bg-white border border-neutral-300 text-xs text-neutral-900 focus:outline-none focus:border-[#6E3B1E] rounded-md resize-none"
-                    />
-                  </div>
+                  </form>
+                )}
 
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="w-full py-3 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs uppercase tracking-wider font-semibold transition-all rounded-md shadow-xs hover:shadow-md cursor-pointer disabled:opacity-50 text-center"
-                    >
-                      Book Now
-                    </button>
-                  </div>
-                </form>
-              )}
+              </div>
             </div>
 
+          </div>
 
-            {/* Right Column: Trust & Information (5 cols) */}
-            <div className="lg:col-span-5 space-y-4">
-              
-              {/* Profile Card */}
-              <div className="bg-white border border-[#E6DDCE] p-6 rounded-none space-y-3">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#A86121] block">
-                  Lead Astrological Advisor
-                </span>
-                <h3 className="text-lg font-semibold text-black font-serif">
-                  Ach. Dr. Mohit Shah
-                </h3>
-                <p className="text-xs text-neutral-600 leading-relaxed font-normal">
-                  Ph.D. in Vedic Astrology (MCVA) &amp; M.A. in Jyotirvigyan (Ranchi University). Dedicated to mathematical rigor, Parashari dasha calculations, and non-superstitious gemstone therapies.
-                </p>
-
-                <div className="pt-2 border-t border-neutral-200 space-y-2 text-xs text-neutral-700">
-                  <div className="flex items-center gap-2">
-                    <Award className="w-4 h-4 text-[#A86121] shrink-0" />
-                    <span>20+ Years Rigorous Vedic Research</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#A86121] shrink-0" />
-                    <span>Certified Lab Tested Gemstone Guidance</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Scroll className="w-4 h-4 text-[#A86121] shrink-0" />
-                    <span>Classical Sanskrit Siddhanta Ephemeris</span>
-                  </div>
-                </div>
+          {/* ── BOTTOM VALUE CARDS STRIP ────────────────────────────────────────── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-[#E6DDCE]">
+            
+            {/* Feature 1 */}
+            <div className="bg-white border border-[#E6DDCE] p-4 rounded-xl flex items-start gap-3.5 shadow-2xs">
+              <div className="w-10 h-10 rounded-lg bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center text-[#6E3B1E] shrink-0">
+                <Calendar className="w-5 h-5" />
               </div>
-
-              {/* Consultation Modes Box */}
-              <div className="bg-[#FAF7F2] border border-[#E6DDCE] p-5 rounded-none space-y-3">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-black">
-                  Consultation Formats
-                </h4>
-                
-                <div className="space-y-2 text-xs text-neutral-700">
-                  <div className="p-2.5 bg-white border border-[#E6DDCE]">
-                    <div className="font-semibold text-black">1. Chamber Consultation (In-Person)</div>
-                    <div className="text-[11px] text-neutral-500 mt-0.5">
-                      Vedic Jyotish Kendra, Harmu Housing Colony, Ranchi.
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 bg-white border border-[#E6DDCE]">
-                    <div className="font-semibold text-black">2. Online Video Session</div>
-                    <div className="text-[11px] text-neutral-500 mt-0.5">
-                      HD Google Meet / WhatsApp Video for global devotees &amp; NRI clients.
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 bg-white border border-[#E6DDCE]">
-                    <div className="font-semibold text-black">3. Telephonic Consultation</div>
-                    <div className="text-[11px] text-neutral-500 mt-0.5">
-                      Direct voice call with recorded planetary findings and prescribed remedies.
-                    </div>
-                  </div>
-                </div>
+              <div>
+                <h3 className="text-xs font-semibold text-neutral-900 font-serif">Easy Scheduling</h3>
+                <p className="text-[11px] text-neutral-600 mt-0.5 font-normal">Choose your preferred date &amp; time.</p>
               </div>
+            </div>
 
-              {/* Kendra Contact Strip */}
-              <div className="p-4 bg-neutral-900 text-white rounded-none space-y-2 text-xs">
-                <div className="font-semibold uppercase tracking-wider text-amber-400 text-[11px]">
-                  Direct Chamber Helplines
-                </div>
-                <div>
-                  Acharya Ji Direct: <strong className="text-white">+91 70044 33677</strong>
-                </div>
-                <div>
-                  Coordinator Aditya: <strong className="text-white">+91 88603 59754</strong>
-                </div>
-                <div className="text-[10px] text-neutral-400 pt-1 border-t border-neutral-800">
-                  Chamber Hours: 10:00 AM – 07:00 PM (Monday – Saturday)
-                </div>
+            {/* Feature 2 */}
+            <div className="bg-white border border-[#E6DDCE] p-4 rounded-xl flex items-start gap-3.5 shadow-2xs">
+              <div className="w-10 h-10 rounded-lg bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center text-[#6E3B1E] shrink-0">
+                <Lock className="w-5 h-5" />
               </div>
+              <div>
+                <h3 className="text-xs font-semibold text-neutral-900 font-serif">Secure Booking</h3>
+                <p className="text-[11px] text-neutral-600 mt-0.5 font-normal">Your data is protected with top security.</p>
+              </div>
+            </div>
 
+            {/* Feature 3 */}
+            <div className="bg-white border border-[#E6DDCE] p-4 rounded-xl flex items-start gap-3.5 shadow-2xs">
+              <div className="w-10 h-10 rounded-lg bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center text-[#6E3B1E] shrink-0">
+                <Bell className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-neutral-900 font-serif">Timely Reminders</h3>
+                <p className="text-[11px] text-neutral-600 mt-0.5 font-normal">Get reminders for your upcoming session.</p>
+              </div>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-white border border-[#E6DDCE] p-4 rounded-xl flex items-start gap-3.5 shadow-2xs">
+              <div className="w-10 h-10 rounded-lg bg-[#FAF7F2] border border-[#E6DDCE] flex items-center justify-center text-[#6E3B1E] shrink-0">
+                <Headphones className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-neutral-900 font-serif">Dedicated Support</h3>
+                <p className="text-[11px] text-neutral-600 mt-0.5 font-normal">We&apos;re here to help you at every step.</p>
+              </div>
             </div>
 
           </div>
@@ -500,8 +680,15 @@ Please confirm the appointment schedule.`;
         </div>
       </main>
 
-      <Footer onOpenBooking={() => setModalOpen(true)} />
-      <ConsultationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <Footer />
     </div>
+  );
+}
+
+export default function BookConsultationPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FAF7F2]" />}>
+      <BookingForm />
+    </Suspense>
   );
 }

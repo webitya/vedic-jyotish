@@ -58,17 +58,17 @@ export default function GemstonesPage() {
 
           {/* Action Buttons */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={() => setBookingOpen(true)}
-              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#A86121] hover:bg-[#91521a] text-white text-xs uppercase tracking-wider font-medium transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
+            <Link
+              href="/book-consultation?service=Gem%20Stone%20Therapy"
+              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#6E3B1E] hover:bg-[#582f17] text-white text-xs uppercase tracking-wider font-semibold transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
             >
               <span>Enquire for Prescription</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+            </Link>
 
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-neutral-300 text-black hover:bg-neutral-50 text-xs uppercase tracking-wider font-medium transition-all rounded-lg"
+              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-neutral-300 text-black hover:bg-neutral-50 text-xs uppercase tracking-wider font-medium transition-all rounded-md"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Home</span>
@@ -78,14 +78,7 @@ export default function GemstonesPage() {
         </div>
       </main>
 
-      {/* ── Standard Full Footer ────────────────────────────────────────────── */}
-      <Footer onOpenBooking={() => setBookingOpen(true)} />
-
-      <ConsultationModal
-        isOpen={bookingOpen}
-        onClose={() => setBookingOpen(false)}
-        initialService="Gem Stone Therapy"
-      />
+      <Footer />
     </div>
   );
 }
