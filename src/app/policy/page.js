@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ConsultationCTA from "@/components/ConsultationCTA";
 import ConsultationModal from "@/components/ConsultationModal";
 import { CheckCircle2 } from "lucide-react";
 import { policies } from "@/data/siteContent";
@@ -15,7 +14,7 @@ export default function PolicyPage() {
   const activePolicy = policies.find((p) => p.id === activeTab) || policies[0];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-800 w-full overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-800 w-full overflow-x-clip">
       <Navbar onOpenBooking={() => setBookingOpen(true)} />
 
       <main className="flex-1 w-full">
@@ -48,9 +47,9 @@ export default function PolicyPage() {
                   <button
                     key={sec.id}
                     onClick={() => setActiveTab(sec.id)}
-                    className={`w-full text-left px-4 py-2.5 text-xs font-normal uppercase tracking-wider transition-all rounded-md cursor-pointer border ${
+                    className={`w-full text-left px-4 py-2.5 text-xs font-medium uppercase tracking-wider transition-all rounded-md cursor-pointer border ${
                       activeTab === sec.id
-                        ? "bg-black text-white border-black shadow-xs"
+                        ? "bg-[#A86121] text-white border-[#A86121] shadow-xs"
                         : "bg-neutral-50 text-neutral-700 border-neutral-200 hover:bg-neutral-100"
                     }`}
                   >
@@ -90,8 +89,6 @@ export default function PolicyPage() {
 
           </div>
         </section>
-
-        <ConsultationCTA onOpenBooking={() => setBookingOpen(true)} />
       </main>
 
       <Footer onOpenBooking={() => setBookingOpen(true)} />

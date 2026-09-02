@@ -1,9 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Climate+Crisis:YEAR@1979&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --font-sans: 'Poppins', 'Montserrat', 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-serif: 'Montserrat', 'Poppins', sans-serif;
+  --font-heading: 'Montserrat', 'Poppins', sans-serif;
+  --font-body: 'Poppins', 'Lato', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-lato: 'Lato', sans-serif;
+  --font-climate: 'Climate Crisis', cursive, sans-serif;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-sans: 'Poppins', 'Montserrat', 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-serif: 'Montserrat', 'Poppins', sans-serif;
+  --font-heading: 'Montserrat', 'Poppins', sans-serif;
+  --font-body: 'Poppins', 'Lato', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-lato: 'Lato', sans-serif;
+  --font-climate: 'Climate Crisis', cursive, sans-serif;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+html {
+  font-family: var(--font-sans);
 }
 
 body {
@@ -11,10 +51,57 @@ body {
   background: var(--background);
   font-family: var(--font-sans);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Headings in Montserrat & Poppins with refined character spacing */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', 'Poppins', sans-serif;
+  letter-spacing: -0.015em;
+}
+
+/* Form elements inheritance */
+input,
+textarea,
+select,
+button,
+optgroup,
+option {
+  font-family: var(--font-sans);
+}
+
+/* Dedicated typography helper utilities */
+.font-poppins {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.font-lato {
+  font-family: 'Lato', sans-serif !important;
+}
+
+.font-climate {
+  font-family: 'Climate Crisis', cursive, sans-serif !important;
+}
+
+.font-heading {
+  font-family: 'Montserrat', 'Poppins', sans-serif !important;
+}
+
+.font-body {
+  font-family: 'Poppins', 'Lato', sans-serif !important;
+}
+
+.font-serif {
+  font-family: 'Montserrat', 'Poppins', sans-serif !important;
+}
+
+
 
 /* Ensure cursor pointer on all links, buttons, interactive cards, and selectors */
 a,
@@ -51,4 +138,55 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a3a3a3;
+}
+
+/* Slow, smooth clockwise circular rotation */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 45s linear infinite;
+  will-change: transform;
+}
+
+/* Slow, smooth anti-clockwise circular rotation */
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-slow-reverse {
+  animation: spin-reverse 45s linear infinite;
+  will-change: transform;
+}
+
+/* Infinite horizontal smooth marquee */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-smooth {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-smooth:hover {
+  animation-play-state: paused;
 }

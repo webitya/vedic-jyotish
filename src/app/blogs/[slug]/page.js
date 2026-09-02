@@ -4,17 +4,9 @@ import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ConsultationCTA from "@/components/ConsultationCTA";
 import ConsultationModal from "@/components/ConsultationModal";
-import { Clock, ArrowRight, Loader2 } from "lucide-react";
-import { blogArticles, clinicInfo } from "@/data/siteContent";
-
-const FALLBACK_IMAGES = {
-  "navamsha-marriage": "https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1200&q=80",
-  "vastu-residential-principles": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-  "vimshottari-dasha-timing": "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1200&q=80",
-};
-const DEFAULT_IMG = "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1200&q=80";
+import { Clock, ArrowRight, Loader2, Calendar, User, Tag, Share2, Sparkles, BookOpen } from "lucide-react";
+import { clinicInfo } from "@/data/siteContent";
 
 export default function BlogDetailPage({ params }) {
   const { slug } = use(params);
@@ -25,7 +17,7 @@ export default function BlogDetailPage({ params }) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    // Try MongoDB first, fall back to static data
+    // Fetch directly from MongoDB
     fetch(`/api/blogs/${slug}`)
       .then(async (r) => {
         if (r.status === 404) throw new Error("not_found");
@@ -34,58 +26,106 @@ export default function BlogDetailPage({ params }) {
       })
       .then((data) => {
         setArticle(data);
-        // Load other articles for further reading
+        // Load other published articles from MongoDB
         return fetch("/api/blogs");
       })
       .then((r) => r.json())
       .then((all) => {
         if (Array.isArray(all)) {
-          setOtherArticles(all.filter((b) => b.slug !== slug).slice(0, 2));
+          setOtherArticles(all.filter((b) => b.slug !== slug).slice(0, 3));
         }
       })
       .catch((err) => {
-        // Fallback to static data
-        const staticArticle = blogArticles.find((b) => b.slug === slug);
-        if (!staticArticle) {
-          setNotFound(true);
-        } else {
-          setArticle(staticArticle);
-          setOtherArticles(blogArticles.filter((b) => b.slug !== slug).slice(0, 2));
-        }
+        setNotFound(true);
       })
       .finally(() => setLoading(false));
   }, [slug]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-neutral-400 animate-spin" />
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-8 h-8 text-neutral-500 animate-spin" />
+        <span className="text-xs text-neutral-500 font-medium">Loading astrological treatise...</span>
       </div>
     );
   }
 
   if (notFound || !article) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4">
-        <p className="text-sm text-neutral-500 font-normal">Article not found.</p>
-        <Link href="/blogs" className="text-xs text-black underline">← Back to all articles</Link>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navbar onOpenBooking={() => setBookingOpen(true)} />
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
+          <BookOpen className="w-12 h-12 text-neutral-300" />
+          <h1 className="text-xl font-semibold text-black">Article Not Found</h1>
+          <p className="text-xs text-neutral-500 max-w-md">
+            The requested astrological article could not be located in the MongoDB database archive or may have been unpublished.
+          </p>
+          <Link
+            href="/blogs"
+            className="px-4 py-2 bg-black text-white text-xs font-medium rounded-none hover:bg-neutral-800"
+          >
+            ← Return to All Articles
+          </Link>
+        </div>
+        <Footer onOpenBooking={() => setBookingOpen(true)} />
       </div>
     );
   }
 
-  const coverImage = article.image?.url || FALLBACK_IMAGES[article.id] || FALLBACK_IMAGES[article.slug] || DEFAULT_IMG;
+  const coverImage = article.image?.url || "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1200&q=80";
   const coverAlt = article.image?.alt || article.title;
 
+  // JSON-LD Schema
+  let schemaJson = article.schemaMarkup;
+  if (!schemaJson || !schemaJson.trim()) {
+    const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://vedicjyotishkendra.in";
+    const defaultSchema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": article.metaTitle || article.title,
+      "description": article.metaDescription || article.excerpt,
+      "image": [coverImage],
+      "author": {
+        "@type": "Person",
+        "name": article.author?.name || clinicInfo.practitioner,
+        "jobTitle": article.author?.role || "Vedic Astrologer & Vastu Consultant",
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Vedic Jyotish Kendra",
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${siteUrl}/logo.png`,
+        },
+      },
+      "datePublished": article.createdAt || new Date().toISOString(),
+      "dateModified": article.updatedAt || new Date().toISOString(),
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `${siteUrl}/blogs/${article.slug}`,
+      },
+      "keywords": article.metaKeywords?.join(", ") || "Vedic Astrology, Jyotish",
+    };
+    schemaJson = JSON.stringify(defaultSchema);
+  }
+
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-800 w-full overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-800 w-full overflow-x-clip font-sans">
+      {/* Dynamic Schema.org JSON-LD structured data injection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: schemaJson }}
+      />
+
       <Navbar onOpenBooking={() => setBookingOpen(true)} />
 
       <main className="flex-1 w-full">
-        {/* Header */}
-        <section className="w-full py-8 sm:py-10 bg-neutral-50 border-b border-neutral-200">
+        {/* Article Masthead */}
+        <section className="w-full py-10 sm:py-14 bg-neutral-50 border-b border-neutral-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-1.5 text-xs text-neutral-500 mb-3 font-normal">
+            
+            {/* Breadcrumb path */}
+            <div className="flex items-center gap-1.5 text-xs text-neutral-500 mb-4 font-normal">
               <Link href="/" className="hover:text-black">Home</Link>
               <span>/</span>
               <Link href="/blogs" className="hover:text-black">Blogs</Link>
@@ -93,94 +133,148 @@ export default function BlogDetailPage({ params }) {
               <span className="text-black font-medium truncate max-w-xs sm:max-w-md">{article.title}</span>
             </div>
 
-            <div>
+            {/* Category & Badges */}
+            <div className="flex items-center gap-2 mb-3">
               {article.category && (
-                <span className="inline-block text-[10px] bg-black text-white px-2.5 py-0.5 rounded font-normal mb-2">
+                <span className="text-[10px] bg-black text-white px-2.5 py-0.5 rounded-none font-semibold uppercase tracking-wider">
                   {article.category}
                 </span>
               )}
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-black tracking-tight leading-tight mt-1 mb-3">
-                {article.title}
-              </h1>
-
-              <div className="flex items-center gap-3 text-xs text-neutral-500 pb-2 border-b border-neutral-200">
-                {article.date && <span>{article.date}</span>}
-                {article.date && <span>·</span>}
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-black" />
-                  <span>{article.readTime}</span>
+              {article.isFeatured && (
+                <span className="text-[10px] bg-amber-600 text-white px-2.5 py-0.5 rounded-none font-bold uppercase tracking-wider">
+                  Featured
                 </span>
-                <span>·</span>
-                <span>Authored by {clinicInfo.practitioner}</span>
+              )}
+            </div>
+
+            {/* Title */}
+            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-black tracking-tight leading-tight mb-4">
+              {article.title}
+            </h1>
+
+            {/* Metadata bar */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-600 pt-3 border-t border-neutral-200">
+              <div className="flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-neutral-500" />
+                <span className="font-medium text-black">{article.author?.name || clinicInfo.practitioner}</span>
+              </div>
+              <span>·</span>
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-neutral-500" />
+                <span>
+                  {article.createdAt
+                    ? new Date(article.createdAt).toLocaleDateString("en-IN", { month: "long", day: "numeric", year: "numeric" })
+                    : "Recently Published"}
+                </span>
+              </div>
+              <span>·</span>
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-neutral-500" />
+                <span>{article.readTime || "5 min read"}</span>
               </div>
             </div>
           </div>
         </section>
 
         {/* Article Body */}
-        <section className="w-full py-8 sm:py-12 bg-white border-b border-neutral-200">
+        <section className="w-full py-10 sm:py-16 bg-white border-b border-neutral-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            {/* Featured Image — from Cloudinary if available */}
-            <div className="border border-neutral-200 bg-neutral-900 aspect-[16/9] max-h-[420px] overflow-hidden mb-8 rounded-md shadow-xs">
+            
+            {/* Cover Image */}
+            <div className="border border-neutral-300 bg-neutral-900 aspect-[16/9] max-h-[460px] overflow-hidden mb-8 rounded-none shadow-xs">
               <img
                 src={coverImage}
                 alt={coverAlt}
-                className="w-full h-full object-cover opacity-90"
+                className="w-full h-full object-cover opacity-95"
               />
             </div>
 
-            {/* Excerpt Lead */}
+            {/* Excerpt */}
             {article.excerpt && (
-              <div className="text-base sm:text-lg text-neutral-800 font-medium leading-relaxed mb-6 pb-4 border-b border-neutral-200">
+              <div className="text-base sm:text-lg text-neutral-800 font-serif italic leading-relaxed mb-8 p-5 bg-neutral-50 border-l-4 border-[#5C1625]">
                 "{article.excerpt}"
               </div>
             )}
 
-            {/* Full Content — supports HTML from MongoDB */}
+            {/* Full Rich Article Body */}
             {article.content ? (
               <div
-                className="prose prose-sm sm:prose max-w-none text-neutral-700 leading-relaxed font-normal"
+                className="prose prose-base max-w-none text-[#2F333B] leading-relaxed font-serif selection:bg-neutral-200"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
             ) : (
-              <div className="text-neutral-500 text-sm font-normal italic">
-                Full article content coming soon.
+              <div className="text-neutral-500 text-sm font-normal italic py-6">
+                Full treatise content coming soon.
               </div>
             )}
 
-            {/* Author Footer Card */}
-            <div className="mt-10 p-5 bg-neutral-50 border border-neutral-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-md shadow-xs">
-              <div>
-                <div className="text-base font-medium text-black">{clinicInfo.practitioner}</div>
-                <div className="text-xs text-neutral-500">Ph.D. Vedic Astrology (MCVA) · M.A. Jyotirvigyan (Ranchi University)</div>
+            {/* Keyword Badges & Tags */}
+            {article.metaKeywords && article.metaKeywords.length > 0 && (
+              <div className="mt-10 pt-6 border-t border-neutral-200">
+                <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-medium block mb-2">
+                  Astrological Indexing Topics:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {article.metaKeywords.map((kw, i) => (
+                    <span
+                      key={i}
+                      className="text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-700 px-2.5 py-1 border border-neutral-300 transition-colors"
+                    >
+                      #{kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Author Attribution Card */}
+            <div className="mt-10 p-6 bg-neutral-50 border border-neutral-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 rounded-none shadow-xs">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-widest text-[#5C1625] font-semibold">
+                  Authored by
+                </span>
+                <div className="text-base font-semibold text-black">
+                  {article.author?.name || clinicInfo.practitioner}
+                </div>
+                <div className="text-xs text-neutral-500 font-normal">
+                  {article.author?.role || "Ph.D. Vedic Astrology (MCVA) · M.A. Jyotirvigyan (Ranchi University)"}
+                </div>
               </div>
               <button
                 onClick={() => setBookingOpen(true)}
-                className="px-5 py-2.5 bg-black text-white text-xs uppercase tracking-wider font-normal hover:bg-neutral-800 transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer shrink-0"
+                className="px-5 py-2.5 bg-black text-white text-xs uppercase tracking-wider font-semibold hover:bg-neutral-800 transition-all rounded-none cursor-pointer shrink-0"
               >
                 Book Astrological Session
               </button>
             </div>
 
-            {/* Further Reading */}
+            {/* Further Reading from MongoDB */}
             {otherArticles.length > 0 && (
-              <div className="mt-10 pt-6 border-t border-neutral-200 space-y-4">
-                <div className="text-xs font-medium uppercase tracking-wider text-black">Further Reading in Vedic Insights</div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="mt-12 pt-8 border-t border-neutral-300 space-y-4">
+                <div className="text-xs font-semibold uppercase tracking-wider text-black">
+                  Further Reading in Vedic Insights
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {otherArticles.map((oth) => (
                     <Link
-                      key={oth._id || oth.id}
+                      key={oth._id}
                       href={`/blogs/${oth.slug}`}
-                      className="p-4 border border-neutral-200 bg-white hover:border-black rounded-md shadow-xs hover:shadow-md transition-all group block"
+                      className="p-4 border border-neutral-300 bg-white hover:border-black rounded-none shadow-xs hover:shadow-md transition-all group block"
                     >
                       {oth.image?.url && (
-                        <div className="aspect-[16/9] overflow-hidden rounded mb-2 bg-neutral-100">
-                          <img src={oth.image.url} alt={oth.image.alt || oth.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div className="aspect-[16/10] overflow-hidden mb-2.5 bg-neutral-100 border border-neutral-200">
+                          <img
+                            src={oth.image.url}
+                            alt={oth.image.alt || oth.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
                         </div>
                       )}
-                      <h3 className="text-sm font-medium text-black group-hover:underline leading-snug">{oth.title}</h3>
-                      <div className="text-[11px] text-neutral-500 mt-1.5 flex items-center gap-1 font-normal">
-                        <span>Read Essay</span>
+                      <h3 className="text-xs font-semibold text-black group-hover:text-[#5C1625] group-hover:underline leading-snug line-clamp-2">
+                        {oth.title}
+                      </h3>
+                      <div className="text-[10px] text-neutral-500 mt-2 flex items-center gap-1">
+                        <span>Read Treatise</span>
                         <ArrowRight className="w-3 h-3" />
                       </div>
                     </Link>
@@ -190,8 +284,6 @@ export default function BlogDetailPage({ params }) {
             )}
           </div>
         </section>
-
-        <ConsultationCTA onOpenBooking={() => setBookingOpen(true)} />
       </main>
 
       <Footer onOpenBooking={() => setBookingOpen(true)} />

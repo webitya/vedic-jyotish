@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Lock, User, Star } from "lucide-react";
+import { Eye, EyeOff, Lock, User } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -56,22 +56,9 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        {/* Brand */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-white/5 border border-white/10 rounded-lg mb-4">
-            <Star className="w-5 h-5 text-white" />
-          </div>
-          <h1 className="text-white text-lg font-medium tracking-tight">
-            Vedic Jyotish Kendra
-          </h1>
-          <p className="text-neutral-500 text-xs mt-1 font-normal">
-            Admin Panel — Restricted Access
-          </p>
-        </div>
-
         {/* Login Card */}
         <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 shadow-2xl">
-          <h2 className="text-white text-sm font-medium mb-5">Sign In</h2>
+          <h2 className="text-white text-sm font-semibold tracking-wider mb-5 text-center uppercase">ADMIN PANEL</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Username */}
@@ -122,7 +109,7 @@ export default function AdminLoginPage() {
 
             {/* Error */}
             {error && (
-              <div className="bg-red-950/50 border border-red-800/50 text-red-400 text-xs px-3 py-2 rounded-md font-normal">
+              <div className="bg-red-950/50 border border-red-800/50 text-red-400 text-xs px-3 py-2 rounded-md font-normal text-center">
                 {error}
               </div>
             )}
@@ -144,10 +131,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
         </div>
-
-        <p className="text-center text-neutral-700 text-[11px] mt-6 font-normal">
-          Vedic Jyotish Kendra · Admin v1.0
-        </p>
       </div>
     </div>
   );

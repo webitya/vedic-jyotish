@@ -36,7 +36,3 @@ export async function POST(request) {
     return Response.json({ error: "Image upload failed: " + error.message }, { status: 500 });
   }
 }
-
-export const config = {
-  api: { bodyParser: false },
-};

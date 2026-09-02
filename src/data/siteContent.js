@@ -1,18 +1,30 @@
 export const clinicInfo = {
   name: "Vedic Jyotish Kendra",
   tagline: "Ancient Wisdom. Meaningful Guidance.",
-  practitioner: "Ach. Dr. Mohit Shah",
-  role: "Astrological Advisor & Counsellor",
+  practitioner: "Dr. Acharya Mohit Ji",
+  companyName: "AstroforU.com",
+  role: "Jyotishacharya & Astrological Counsellor",
+  experience: "20+ Years Clinical Practice",
   qualifications: [
     {
-      degree: "Ph.D. Vedic Astrology",
-      institution: "MCVA, Udaypur, RJ",
-      type: "Doctoral Research in Vedic Astrological Sciences",
+      degree: "M.A. in Jyotish Acharya",
+      institution: "Ranchi University (RU)",
+      type: "Master of Arts in Classical Jyotish Shastra",
     },
     {
-      degree: "M.A. Jyotirvigyan",
-      institution: "Ranchi University",
-      type: "Postgraduate Classical Jyotish Studies",
+      degree: "Postgraduate (P.G) & MBA-HR",
+      institution: "IIHMR & SMU",
+      type: "Health Management & Human Resource Management",
+    },
+    {
+      degree: "UG - Business Administration",
+      institution: "Amity Noida",
+      type: "International Business",
+    },
+    {
+      degree: "Professorship in Vedic Astrology",
+      institution: "Ongoing Academic Pursuit",
+      type: "Advanced Scholarly Research & Preparation",
     },
   ],
   phone: "7004433677",

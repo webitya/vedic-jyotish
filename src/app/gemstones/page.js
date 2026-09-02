@@ -5,48 +5,54 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
-import { ShoppingBag, ArrowLeft, ArrowUpRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import {
+  ShoppingBag,
+  ArrowLeft,
+  ArrowUpRight,
+  ShieldCheck,
+  CheckCircle2
+} from "lucide-react";
 
 export default function GemstonesPage() {
   const [bookingOpen, setBookingOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-white text-neutral-800 w-full overflow-x-hidden">
+    <div className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-800 w-full overflow-x-clip font-sans">
       <Navbar onOpenBooking={() => setBookingOpen(true)} />
 
-      {/* Centered Full Screen Height Section */}
-      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-xl w-full text-center space-y-6 bg-white border border-neutral-200 p-8 sm:p-10 rounded-md shadow-sm">
+      {/* ── Centered Main Body ─────────────────────────────────────────────── */}
+      <main className="flex-1 flex items-center justify-center py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-lg w-full bg-white border border-neutral-200 p-6 sm:p-8 rounded-xl shadow-xs text-center space-y-4">
           
-          {/* Basket Icon Badge */}
-          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-neutral-50 border border-neutral-200 flex items-center justify-center shadow-xs">
-            <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-black stroke-[1.5]" />
+          {/* Top Pill (No star icon) */}
+          <div className="inline-flex items-center px-3 py-1 bg-neutral-100 border border-neutral-200 text-[10px] uppercase tracking-wider text-neutral-800 font-semibold rounded-full mx-auto">
+            <span>Sacred Minerals & Rudraksha Store</span>
           </div>
 
-          {/* Heading & Coming Soon */}
-          <div className="space-y-1.5">
-            <h1 className="text-2xl sm:text-3xl font-medium text-black tracking-tight">
+          {/* Heading */}
+          <div className="space-y-1">
+            <h1 className="text-xl sm:text-2xl font-semibold text-black tracking-tight uppercase">
               Gemstones & Rudraksha
             </h1>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-medium text-neutral-900 tracking-tight">
+            <div className="text-2xl sm:text-3xl font-semibold text-neutral-900 tracking-tight">
               Coming Soon
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal max-w-md mx-auto">
-            We are currently preparing an authenticated digital store for 100% natural, unheated Navratna gemstones and sacred Himalayan Mukhi Rudrakshas, all backed by government-approved gemological test certificates.
+          <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal max-w-sm mx-auto">
+            We are curating an authenticated digital vault for 100% natural, untreated Navratna gemstones and Himalayan Mukhi Rudrakshas, complete with government-approved gemological test certificates.
           </p>
 
-          {/* Quality Guarantees */}
-          <div className="pt-1 flex flex-wrap items-center justify-center gap-4 text-xs text-neutral-500 font-normal">
-            <div className="flex items-center gap-1.5 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-md shadow-2xs">
-              <ShieldCheck className="w-4 h-4 text-black" />
+          {/* Quality Badges */}
+          <div className="grid grid-cols-2 gap-2.5 pt-1 text-[11px] text-neutral-700">
+            <div className="flex items-center justify-center gap-1.5 bg-neutral-50 border border-neutral-200 p-2.5 rounded-lg font-medium">
+              <ShieldCheck className="w-4 h-4 text-black shrink-0" />
               <span>Lab Certified Minerals</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-md shadow-2xs">
-              <CheckCircle2 className="w-4 h-4 text-black" />
-              <span>Prescribed by Natal Chart</span>
+            <div className="flex items-center justify-center gap-1.5 bg-neutral-50 border border-neutral-200 p-2.5 rounded-lg font-medium">
+              <CheckCircle2 className="w-4 h-4 text-black shrink-0" />
+              <span>Chart Prescribed</span>
             </div>
           </div>
 
@@ -54,7 +60,7 @@ export default function GemstonesPage() {
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => setBookingOpen(true)}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black text-white text-xs uppercase tracking-wider font-normal hover:bg-neutral-800 transition-all rounded-md shadow-sm hover:shadow-md cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#A86121] hover:bg-[#91521a] text-white text-xs uppercase tracking-wider font-medium transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
             >
               <span>Enquire for Prescription</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -62,7 +68,7 @@ export default function GemstonesPage() {
 
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-neutral-300 text-black hover:bg-neutral-50 text-xs uppercase tracking-wider font-normal transition-all rounded-md shadow-xs hover:shadow-sm"
+              className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 border border-neutral-300 text-black hover:bg-neutral-50 text-xs uppercase tracking-wider font-medium transition-all rounded-lg"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Home</span>
@@ -72,7 +78,9 @@ export default function GemstonesPage() {
         </div>
       </main>
 
+      {/* ── Standard Full Footer ────────────────────────────────────────────── */}
       <Footer onOpenBooking={() => setBookingOpen(true)} />
+
       <ConsultationModal
         isOpen={bookingOpen}
         onClose={() => setBookingOpen(false)}

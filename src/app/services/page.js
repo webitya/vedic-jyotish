@@ -1,194 +1,285 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ConsultationCTA from "@/components/ConsultationCTA";
 import ConsultationModal from "@/components/ConsultationModal";
 import {
   Compass,
-  Heart,
-  CircleUser,
-  Shield,
-  BookOpen,
-  GraduationCap,
-  Briefcase,
   TrendingUp,
-  BarChart3,
-  Scale,
   Home,
   Flame,
-  Hash,
-  Eye,
-  Gem,
+  Clock,
+  ArrowRight,
+  ArrowUpRight,
+  ShieldCheck,
+  CheckCircle2,
   Calendar,
+  Loader2,
+  Search
 } from "lucide-react";
-import { serviceCategories, allServices } from "@/data/siteContent";
+import { serviceCategories } from "@/data/siteContent";
 
-export default function ServicesPage() {
+export default function ServicesDirectoryPage() {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState("Birth Chart Analysis");
-  const [activeTab, setActiveTab] = useState("all");
+  const [selectedService, setSelectedService] = useState("");
 
   const iconMap = {
-    Compass,
-    Heart,
-    CircleUser,
-    Shield,
-    BookOpen,
-    GraduationCap,
-    Briefcase,
-    TrendingUp,
-    BarChart3,
-    Scale,
-    Home,
-    Flame,
-    Hash,
-    Eye,
-    Gem,
+    Compass: Compass,
+    TrendingUp: TrendingUp,
+    Home: Home,
+    Flame: Flame,
+    Clock: Clock,
+    ShieldCheck: ShieldCheck,
   };
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data);
+        } else {
+          // Flatten fallback
+          const flattened = serviceCategories.flatMap((c) =>
+            c.services.map((s) => ({ ...s, category: c.title }))
+          );
+          setServices(flattened);
+        }
+      })
+      .catch(() => {
+        const flattened = serviceCategories.flatMap((c) =>
+          c.services.map((s) => ({ ...s, category: c.title }))
+        );
+        setServices(flattened);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleBookService = (name) => {
     setSelectedService(name || "Birth Chart Analysis");
     setBookingOpen(true);
   };
 
-  const filteredCategories =
-    activeTab === "all"
-      ? serviceCategories
-      : serviceCategories.filter((c) => c.id === activeTab);
+  // Filter services by search query
+  const displayedServices = services.filter((s) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      s.name?.toLowerCase().includes(query) ||
+      s.subtitle?.toLowerCase().includes(query) ||
+      s.description?.toLowerCase().includes(query) ||
+      s.shortSummary?.toLowerCase().includes(query) ||
+      s.category?.toLowerCase().includes(query)
+    );
+  });
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-800 w-full overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-neutral-800 w-full overflow-x-clip font-sans">
       <Navbar onOpenBooking={() => handleBookService()} />
 
-      <main className="flex-1 w-full">
-        {/* Page Hero */}
-        <section className="w-full py-8 sm:py-12 bg-neutral-50 border-b border-neutral-200">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12">
-            <div className="max-w-3xl">
-              <h1 className="text-3xl sm:text-4xl font-medium text-black tracking-tight leading-tight mb-3">
-                Services & Consultations
-              </h1>
-              <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-normal">
-                All 15 authentic astrological, spatial Vastu, and remedial disciplines personally conducted by Ach. Dr. Mohit Shah. Every session includes rigorous mathematical chart calculation.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Directory Section */}
-        <section className="w-full py-8 sm:py-12 bg-white border-b border-neutral-200">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 space-y-10">
+      <main className="flex-1 w-full bg-[#FAF7F2]">
+        {/* Unified Services Section with warm cream background */}
+        <section className="w-full pt-6 sm:pt-7 pb-12 sm:pb-16 border-b border-[#E6DDCE]">
+          <div className="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap gap-1.5 pb-4 border-b border-neutral-200">
-              <button
-                onClick={() => setActiveTab("all")}
-                className={`px-3.5 py-1.5 text-xs uppercase tracking-wider font-normal transition-all rounded-md cursor-pointer ${
-                  activeTab === "all"
-                    ? "bg-black text-white shadow-xs"
-                    : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
-                }`}
-              >
-                All 15 Disciplines
-              </button>
-              {serviceCategories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveTab(cat.id)}
-                  className={`px-3.5 py-1.5 text-xs uppercase tracking-wider font-normal transition-all rounded-md cursor-pointer ${
-                    activeTab === cat.id
-                      ? "bg-black text-white shadow-xs"
-                      : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
-                  }`}
-                >
-                  {cat.title}
-                </button>
-              ))}
+            {/* Header: Heading on Left & Search Bar on Right */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 sm:mb-6">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-semibold text-black uppercase tracking-tight">
+                  Services & Consultations
+                </h1>
+              </div>
+
+              {/* Search Bar in Right Side */}
+              <div className="w-full sm:w-80 flex items-center">
+                <div className="relative w-full flex items-center">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search services..."
+                    className="w-full text-xs border border-[#D5C9B6] pr-20 pl-3 py-2 bg-white text-black focus:outline-none focus:border-black rounded-md transition-colors"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-1 px-3 py-1.5 bg-[#A86121] hover:bg-[#91521a] text-white text-xs font-medium rounded-sm cursor-pointer flex items-center gap-1 shrink-0 transition-colors"
+                  >
+                    <Search className="w-3 h-3" />
+                    <span>Search</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* Categorized Services List */}
-            {filteredCategories.map((category) => (
-              <div key={category.id} className="space-y-4">
-                
-                {/* Category Header */}
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pb-2 border-b border-neutral-200">
-                  <h2 className="text-lg sm:text-xl font-medium text-black">
-                    {category.title}
-                  </h2>
-                  <span className="text-xs text-neutral-500 font-normal">
-                    {category.shortDescription}
-                  </span>
-                </div>
-
-                {/* Service Cards Grid with small rounded corners & shadows */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-                  {category.services.map((srv) => {
-                    const Icon = iconMap[srv.icon] || Compass;
-                    return (
-                      <div
-                        key={srv.id}
-                        className="bg-white border border-neutral-200 p-4 sm:p-5 flex flex-col justify-between hover:border-black rounded-md shadow-xs hover:shadow-md transition-all duration-200 group"
-                      >
-                        <div>
-                          {/* Top Card Bar */}
-                          <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-neutral-100">
-                            <div className="w-7 h-7 border border-neutral-200 bg-neutral-50 flex items-center justify-center rounded-md">
-                              <Icon className="w-3.5 h-3.5 text-black" />
-                            </div>
-                            {srv.subtitle && (
-                              <span className="text-[11px] text-neutral-500 font-normal">
-                                {srv.subtitle}
+            {/* Unified Continuous Services Grid */}
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-white border border-neutral-200 rounded-lg overflow-hidden shadow-2xs animate-pulse"
+                  >
+                    <div className="aspect-[16/9] bg-neutral-200/90 w-full"></div>
+                    <div className="p-4 space-y-2.5">
+                      <div className="h-4 bg-neutral-200/90 rounded-xs w-3/4"></div>
+                      <div className="space-y-1">
+                        <div className="h-3 bg-neutral-200/70 rounded-xs w-full"></div>
+                        <div className="h-3 bg-neutral-200/70 rounded-xs w-5/6"></div>
+                      </div>
+                      <div className="pt-2.5 border-t border-neutral-100 flex gap-2">
+                        <div className="h-7 bg-neutral-200/60 rounded-md w-16"></div>
+                        <div className="h-7 bg-neutral-200/80 rounded-md flex-1"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : displayedServices.length === 0 ? (
+              <div className="text-center py-16 bg-neutral-50/50 border border-dashed border-neutral-300 rounded-lg space-y-2.5 max-w-md mx-auto">
+                <Compass className="w-8 h-8 text-neutral-300 mx-auto" />
+                <h3 className="text-sm font-semibold text-black uppercase tracking-wider">No Services Found</h3>
+                <p className="text-xs text-neutral-500">
+                  {searchQuery
+                    ? "No consultation services matched your search query."
+                    : "No services available in the catalog."}
+                </p>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="mt-2 px-3.5 py-1.5 bg-[#A86121] hover:bg-[#91521a] text-white text-xs font-medium rounded-md cursor-pointer transition-colors"
+                  >
+                    Clear Search
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
+                {displayedServices.map((srv) => {
+                  const Icon = iconMap[srv.icon] || Compass;
+                  return (
+                    <div
+                      key={srv._id || srv.id || srv.slug}
+                      className="bg-white border border-[#E6DDCE] flex flex-col justify-between hover:border-[#7C2D37] rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_6px_20px_rgba(92,22,37,0.08)] transition-all duration-200 group overflow-hidden cursor-pointer"
+                    >
+                      {/* Card Image Banner */}
+                      <Link href={`/services/${srv.slug}`} className="block">
+                        {srv.image?.url ? (
+                          <div className="relative aspect-[16/9] bg-neutral-900 overflow-hidden border-b border-[#E6DDCE]">
+                            <img
+                              src={srv.image.url}
+                              alt={srv.image.alt || srv.name}
+                              className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300 opacity-90 group-hover:opacity-100"
+                            />
+                            <span className="absolute top-2 left-2 bg-black/85 text-white text-[9px] px-2 py-0.5 font-medium uppercase tracking-wider rounded-sm">
+                              {srv.category}
+                            </span>
+                            {srv.isPopular && (
+                              <span className="absolute top-2 right-2 bg-amber-600 text-white text-[9px] px-2 py-0.5 font-bold uppercase tracking-wider rounded-sm">
+                                Popular ★
                               </span>
                             )}
                           </div>
+                        ) : null}
+                      </Link>
 
-                          <h3 className="text-base sm:text-lg font-medium text-black mb-1.5 leading-snug">
-                            {srv.name}
-                          </h3>
+                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                        <Link href={`/services/${srv.slug}`} className="block space-y-2">
+                          {/* Top Card Bar (If no cover image) */}
+                          {!srv.image?.url && (
+                            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E6DDCE]">
+                              <div className="w-7 h-7 border border-[#E2D8C7] bg-[#F3ECE0] flex items-center justify-center rounded-md">
+                                <Icon className="w-3.5 h-3.5 text-black" />
+                              </div>
+                              <span className="text-[9px] bg-[#EFE7D8] text-neutral-800 px-2 py-0.5 rounded-sm font-medium uppercase">
+                                {srv.category}
+                              </span>
+                            </div>
+                          )}
 
-                          <p className="text-xs text-neutral-600 leading-relaxed mb-3 font-normal">
-                            {srv.description}
-                          </p>
+                          <div>
+                            <h3 className="text-sm sm:text-base font-semibold text-black mb-0.5 leading-snug group-hover:text-[#5C1625] transition-colors">
+                              {srv.name}
+                            </h3>
+
+                            {srv.subtitle && (
+                              <span className="text-[10px] sm:text-[11px] text-[#7C2D37] font-medium italic block mb-1.5">
+                                {srv.subtitle}
+                              </span>
+                            )}
+
+                            <p className="text-[11px] sm:text-xs text-neutral-700 leading-relaxed mb-2.5 font-normal line-clamp-2">
+                              {srv.shortSummary || srv.description}
+                            </p>
+                          </div>
+
+                          {/* Price & Duration */}
+                          {(srv.price || srv.duration) && (
+                            <div className="flex items-center gap-2 mb-2 text-[10px] sm:text-[11px] text-neutral-700">
+                              {srv.price && (
+                                <span className="font-semibold text-black bg-[#EFE7D8] px-1.5 py-0.5 border border-[#DCD1BF] rounded-sm">
+                                  {srv.price}
+                                </span>
+                              )}
+                              {srv.duration && (
+                                <span className="flex items-center gap-1 text-neutral-600">
+                                  <Clock className="w-3 h-3 text-neutral-500" />
+                                  <span>{srv.duration}</span>
+                                </span>
+                              )}
+                            </div>
+                          )}
 
                           {/* Diagnostic Inclusions Box */}
-                          <div className="bg-neutral-50 p-2.5 border border-neutral-200 mb-4 space-y-1 text-[11px] rounded-md shadow-2xs">
-                            <div className="font-medium text-black uppercase tracking-wider text-[10px]">
-                              Parameters Evaluated:
+                          {(srv.bhavasAnalyzed || srv.karakaPlanets) && (
+                            <div className="bg-[#F3ECE0] p-2 border border-[#E2D8C7] mb-2 space-y-0.5 text-[10px] sm:text-[11px] rounded-md">
+                              <div className="font-medium text-black uppercase tracking-wider text-[9px]">
+                                Parameters Evaluated:
+                              </div>
+                              <div className="text-neutral-700 space-y-0.5">
+                                {srv.bhavasAnalyzed && <div>• <strong>Houses:</strong> {srv.bhavasAnalyzed}</div>}
+                                {srv.karakaPlanets && <div>• <strong>Karakas:</strong> {srv.karakaPlanets}</div>}
+                              </div>
                             </div>
-                            <div className="text-neutral-600 space-y-0.5">
-                              <div>• <strong>Houses:</strong> {srv.bhavasAnalyzed}</div>
-                              <div>• <strong>Karakas:</strong> {srv.karakaPlanets}</div>
-                            </div>
-                          </div>
-                        </div>
+                          )}
+                        </Link>
 
                         {/* Booking Action */}
-                        <div className="pt-2.5 border-t border-neutral-100 flex items-center justify-between">
+                        <div className="pt-2.5 border-t border-[#E6DDCE] flex items-center justify-between gap-2">
+                          <Link
+                            href={`/services/${srv.slug}`}
+                            className="px-3 py-1.5 bg-[#FAF6EE] border border-[#D5C9B6] hover:border-black text-[11px] font-medium text-neutral-800 transition-all rounded-md"
+                          >
+                            Details
+                          </Link>
                           <button
-                            onClick={() => handleBookService(srv.name)}
-                            className="w-full flex items-center justify-center gap-1.5 py-2 bg-black text-white text-xs uppercase tracking-wider font-normal hover:bg-neutral-800 transition-all rounded-md shadow-xs hover:shadow-sm cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleBookService(srv.name);
+                            }}
+                            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 bg-[#A86121] hover:bg-[#91521a] text-white text-[11px] uppercase tracking-wider font-medium transition-all rounded-md shadow-2xs hover:shadow-xs cursor-pointer"
                           >
                             <Calendar className="w-3 h-3" />
-                            <span>Book Consultation</span>
+                            <span>Book Session</span>
                           </button>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+            )}
 
           </div>
         </section>
-
-        <ConsultationCTA onOpenBooking={() => handleBookService()} />
       </main>
 
-      <Footer onOpenBooking={() => handleBookService()} />
+      <Footer />
+
       <ConsultationModal
         isOpen={bookingOpen}
         onClose={() => setBookingOpen(false)}
