@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, Mail, MapPin, Navigation, ShieldCheck, Lock } from "lucide-react";
+import { Phone, Mail, MapPin, Navigation } from "lucide-react";
 import { clinicInfo, serviceCategories } from "@/data/siteContent";
 
 export default function Footer({ onOpenBooking }) {
@@ -39,10 +39,6 @@ export default function Footer({ onOpenBooking }) {
             <div className="pt-1 text-[11px] text-white/70 space-y-0.5 font-normal">
               <div>• M.A. in Jyotish Acharya (Ranchi University)</div>
               <div>• AstroforU.com (Registered under GST Act)</div>
-              <div className="flex items-center gap-1.5 pt-1 text-white/90 font-medium">
-                <Lock className="w-3.5 h-3.5 text-amber-300" />
-                <span>256-Bit SSL Encrypted &amp; Razorpay Verified</span>
-              </div>
             </div>
           </div>
 
@@ -59,22 +55,22 @@ export default function Footer({ onOpenBooking }) {
               </li>
               <li>
                 <Link href="/about" className="hover:text-white transition-colors cursor-pointer">
-                  About Acharya Ji
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link href="/services" className="hover:text-white transition-colors cursor-pointer">
-                  15 Disciplines Directory
+                  Services
                 </Link>
               </li>
               <li>
                 <Link href="/gallery" className="hover:text-white transition-colors cursor-pointer">
-                  Visual Heritage Archive
+                  Gallery
                 </Link>
               </li>
               <li>
                 <Link href="/blogs" className="hover:text-white transition-colors cursor-pointer">
-                  Vedic Insights
+                  Blogs
                 </Link>
               </li>
               <li>
@@ -83,8 +79,13 @@ export default function Footer({ onOpenBooking }) {
                 </Link>
               </li>
               <li>
+                <Link href="/book-consultation" className="hover:text-white transition-colors cursor-pointer font-medium text-amber-200">
+                  Book Consultation
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className="hover:text-white transition-colors cursor-pointer">
-                  Contact &amp; Kendra Map
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -92,9 +93,8 @@ export default function Footer({ onOpenBooking }) {
 
           {/* Column 3: Legal & Payment Compliance (Col 3) */}
           <div className="lg:col-span-3 space-y-3">
-            <div className="text-xs font-semibold uppercase tracking-wider text-white font-serif border-b border-white/10 pb-1 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
-              <span>Legal &amp; Compliance</span>
+            <div className="text-xs font-semibold uppercase tracking-wider text-white font-serif border-b border-white/10 pb-1">
+              Legal &amp; Compliance
             </div>
             <ul className="space-y-1.5 text-white/80 font-normal">
               <li>
